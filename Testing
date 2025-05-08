@@ -1,0 +1,39 @@
+describe('Proses Login', () => {
+    // Sebelum setiap tes, buka halaman login
+    beforeEach(() => {
+        cy.visit('https://yourwebsite.com/login');
+    });
+
+    // Kasus Uji 1: Login berhasil dengan kredensial yang benar
+    it('seharusnya berhasil login dengan kredensial yang valid', () => {
+        // Masukkan email yang valid
+        cy.get('input[name="email"]').type('user@example.com');
+
+        // Masukkan password yang valid
+        cy.get('input[name="password"]').type('validPassword123');
+
+        // Klik tombol login
+        cy.get('button[type="submit"]').click();
+
+        // Verifikasi bahwa pengguna diarahkan ke halaman dashboard
+        cy.url().should('include', '/dashboard');
+
+        // Verifikasi elemen yang spesifik untuk pengguna (misalnya, nama profil)
+        cy.get('.user-profile').should('contain', 'Selamat datang, User!');
+    });
+
+    // Kasus Uji 2: Login gagal dengan kredensial yang salah
+    it('seharusnya menampilkan pesan error untuk kredensial yang salah', () => {
+        // Masukkan email yang salah
+        cy.get('input[name="email"]').type('wrong@example.com');
+
+        // Masukkan password yang salah
+        cy.get('input[name="password"]').type('wrongPassword');
+
+        // Klik tombol login
+        cy.get('button[type="submit"]').click();
+
+        // Verifikasi bahwa pesan error ditampilkan
+        cy.get('.error-message').should('be.visible').and('contain', 'Kredensial tidak valid');
+    });
+});
